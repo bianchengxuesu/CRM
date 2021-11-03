@@ -14,7 +14,7 @@ public class Test1 {
 
     @Test
     public  void test1(){
-        String time = "2021-12-12 10:10:10";
+        String time = "2009-12-12 10:10:10";
         //当前系统时间
         String sysTime = DateTimeUtil.getSysTime();
         int test = sysTime.compareTo(time);
