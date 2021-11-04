@@ -21,22 +21,24 @@ public class UserController extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("进入用户控制器");
+        System.out.println("进入用户控制器"+"123");
         String path = req.getServletPath();
 
-        if ("/setting/user/login.do".equals(path)){
+        if ("/settings/user/login.do".equals(path)){
             login(req,resp);
-        }else if("/setting/user/other.do".equals(path)){
+        }else if("/settings/user/other.do".equals(path)){
 
         }
     }
 
     private void login(HttpServletRequest req, HttpServletResponse resp) {
-        System.out.println("进入验证登录操作");
+        System.out.println("进入验证登录操作"+"456");
         String loginAct = req.getParameter("loginAct");
         String loginPwd = req.getParameter("loginPwd");
+
         //将密码明文转换为MD5的密文
-        loginPwd = MD5Util.getMD5("loginPwd");
+        loginPwd = MD5Util.getMD5(loginPwd);
+
         //接收浏览器端的IP地址
         String IP = req.getRemoteAddr();
         System.out.println("IP: -- "+IP);

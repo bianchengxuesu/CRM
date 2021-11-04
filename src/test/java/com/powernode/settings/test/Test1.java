@@ -14,7 +14,7 @@ public class Test1 {
 
     @Test
     public  void test1(){
-        String time = "2009-12-12 10:10:10";
+        /*String time = "2009-12-12 10:10:10";
         //当前系统时间
         String sysTime = DateTimeUtil.getSysTime();
         int test = sysTime.compareTo(time);
@@ -36,5 +36,10 @@ public class Test1 {
         String md = MD5Util.getMD5(pwd1);
         System.out.println(md5);
         System.out.println(md);
+        */
+        String pwd = "123";
+        String md5 = MD5Util.getMD5(pwd);
+        System.out.println(md5);
+
     }
 }

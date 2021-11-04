@@ -15,7 +15,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		$(function (){
 			//清空用户名和密码框
 			$("#loginAct").val("");
-			$("#loginPwd").val("");
+
 			//用户文本框自动获得焦点
 			$("#loginAct").focus();
 			//提交按钮绑定事件
