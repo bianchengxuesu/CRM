@@ -17,7 +17,7 @@
   <!-- 一般过滤一个后端.do, 一个前端.jsp 即可  -->
   <filter>
     <filter-name>LoginFilter</filter-name>
-    <filter-class>com.powernode.crm.web.filter.EncodingFilter</filter-class>
+    <filter-class>com.powernode.crm.web.filter.LoginFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>LoginFilter</filter-name>
