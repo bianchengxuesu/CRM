@@ -13,7 +13,18 @@
     <filter-name>EncodingFilter</filter-name>
     <url-pattern>*.do</url-pattern>
   </filter-mapping>
-  
+
+  <!-- 一般过滤一个后端.do, 一个前端.jsp 即可  -->
+  <filter>
+    <filter-name>LoginFilter</filter-name>
+    <filter-class>com.powernode.crm.web.filter.EncodingFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>LoginFilter</filter-name>
+    <url-pattern>*.do</url-pattern>
+    <url-pattern>*.jsp</url-pattern>
+  </filter-mapping>
+
   <servlet>
     <servlet-name>UserController</servlet-name>
     <servlet-class>com.powernode.crm.settings.web.controll.UserController</servlet-class>
