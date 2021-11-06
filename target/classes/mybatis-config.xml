@@ -9,7 +9,8 @@
   <typeAliases>
   
   	<package name="com.powernode.crm.settings.domain"/>
-  	
+  	<package name="com.powernode.crm.workbench.domain"/>
+
   
   </typeAliases>
   
@@ -29,7 +30,7 @@
   <mappers>
    
       <package name="com.powernode.crm.settings.dao"/>
-    
+      <package name="com.powernode.crm.workbench.dao"/>
   </mappers>
 </configuration>
 
