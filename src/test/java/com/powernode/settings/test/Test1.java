@@ -37,7 +37,7 @@ public class Test1 {
         System.out.println(md5);
         System.out.println(md);
         */
-        String pwd = "123";
+        String pwd = "pwdLoginf";
         String md5 = MD5Util.getMD5(pwd);
         System.out.println(md5);
 

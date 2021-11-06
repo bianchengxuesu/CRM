@@ -7,6 +7,7 @@ import com.powernode.crm.utils.DateTimeUtil;
 import com.powernode.crm.utils.PrintJson;
 import com.powernode.crm.utils.ServiceFactory;
 import com.powernode.crm.utils.UUIDUtil;
+import com.powernode.crm.vo.PaginationVO;
 import com.powernode.crm.workbench.domain.Activity;
 import com.powernode.crm.workbench.service.ActivityService;
 import com.powernode.crm.workbench.service.impl.ActivityServiceImpl;
@@ -16,7 +17,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ActivityController extends HttpServlet {
 
@@ -38,7 +41,69 @@ public class ActivityController extends HttpServlet {
 
             save(req,resp);
             
+        }else if("/workbench/activity/pageList.do".equals(path)){
+
+            pageList(req,resp);
+
         }
+    }
+
+    private void pageList(HttpServletRequest req, HttpServletResponse resp) {
+
+        System.out.println("进入到查询市场活动信息列表的操作（结合条件查询+分页查询)");
+
+        String name = req.getParameter( "name" );
+        String owner = req.getParameter( "owner" );
+        String startDate = req.getParameter( "startDate" );
+        String endDate = req.getParameter( "endDate");
+        String pageNoStr = req.getParameter("pageNo" ) ;
+        int pageNo = Integer.valueOf(pageNoStr);
+        //每页展现的记录数
+        String pagesizeStr = req.getParameter( "pageSize");
+        int pageSize = Integer.valueOf(pagesizeStr);
+        //计算出略过的记录数
+        int skipCount = (pageNo - 1) * pageSize;
+
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("name", name) ;
+        map.put("owner", owner);
+        map.put("startDate", startDate);
+        map.put("endDate", endDate);
+        map.put("skipCount", skipCount);
+        map.put("pageSize", pageSize);
+
+        ActivityService as = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+
+        /**
+            前端要:市场活动信息列表
+            查询的总条数
+            业务层拿到了以上两项信息之后，如何做返回map
+            map.put( "dataList" : datalist)
+            map.put( "total" :total)
+            PrintJSON map --> json
+            { "total":100 , "datalist":[{市场活动1},{2],{3}]]}
+
+            vo
+            PaginationVO<T>
+            private int total;
+            private List<T> dateList;
+            如：
+            PaginationVO<Activity> vo = new PaginationVO<>();
+            vo.setTotal(total);
+            vo.setDataList(dataList);
+            PrintJSON vo--> json
+            { "total":100 , "datalist":[{市场活动1},{2],{3}]]}
+
+
+         通过分析，分页查询，每个模块都有
+            使用一个通用的vo，操作方便
+         */
+        PaginationVO<Activity> vo = as.pageList(map);
+
+        PrintJson.printJsonObj(resp, vo);
+
+        
+
     }
 
     private void save(HttpServletRequest req, HttpServletResponse resp) {
