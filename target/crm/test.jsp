@@ -20,5 +20,18 @@
 
             }
         })
+
+
+        String id = UUIDUtil.getUUID();
+        String owner = req.getParameter("owner");
+        String name = req.getParameter("name");
+        String startDate = req.getParameter("startDate");
+        String endDate = req.getParameter("endDate");
+        String cost = req.getParameter("cost");
+        String description = req.getParameter("description");
+        //创建时间，当前系统时间
+        String createTime = DateTimeUtil.getSysTime();
+        //创建人：当前登录用户
+        String createBy = ((User)req.getSession().getAttribute("user")).getName();
 </body>
 </html>

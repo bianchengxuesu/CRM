@@ -24,7 +24,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			})
 			//为窗口绑定键盘事件
 			$(window).keydown(function (event) {
-				if (event==13){
+				//alert(event.keyCode);
+				if (event.keyCode==13){
 					login();
 				}
 			})
