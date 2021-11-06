@@ -1,4 +1,4 @@
-package com.powernode.crm.settings.web.controll;
+package com.powernode.crm.settings.web.controller;
 
 import com.powernode.crm.settings.domain.User;
 import com.powernode.crm.settings.service.UserService;
@@ -7,12 +7,10 @@ import com.powernode.crm.utils.MD5Util;
 import com.powernode.crm.utils.PrintJson;
 import com.powernode.crm.utils.ServiceFactory;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;

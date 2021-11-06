@@ -8,6 +8,17 @@
     <title>Title</title>
 </head>
 <body>
+        //ajax模板
+        $.ajax({
+            url : "",
+            data : {
 
+            },
+            type : "",
+            dataType : "",
+            success : function (data) {
+
+            }
+        })
 </body>
 </html>

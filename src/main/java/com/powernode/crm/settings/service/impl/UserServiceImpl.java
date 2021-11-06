@@ -10,6 +10,7 @@ import org.apache.ibatis.session.SqlSession;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UserServiceImpl implements UserService {
@@ -46,5 +47,13 @@ public class UserServiceImpl implements UserService {
             throw new LoginException("IP地址受限制");
         }
         return user;
+    }
+
+    @Override
+    public List<User> getUserList() {
+
+        List<User> uList = userDao.getUserList();
+
+        return uList;
     }
 }

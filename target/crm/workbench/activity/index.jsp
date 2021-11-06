@@ -21,13 +21,56 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 	$(function(){
 		
 		$("#addBtn").click(function (){
+
+			$(".time").datetimepicker({
+				minView: "month",
+				language:  'zh-CN',
+				format: 'yyyy-mm-dd',
+				autoclose: true,
+				todayBtn: true,
+				pickerPosition: "bottom-left"
+			});
+
 			/*
 				操作模态窗口的方式：
 					操作模态窗口的jquery对象，调用modal方法，传递参数， show：打开 hide：关闭
 
 			 */
-			alert("123123");
-			$("#createActivityModal").modal("show");
+			//alert("123123");
+			//走后台，获取用户信息，为所有者下拉框铺值
+			$.ajax({
+				url : "workbench/activity/getUserList.do",
+				type : "get",
+				dataType : "json",
+				success : function (data) {
+					//后台数据
+					/*
+						data
+							[{用户1},{用户2},...]
+							即[{"id":?, "name":?,"loginAct":?,...}...]
+					 */
+
+
+					var html = "<option></option>";
+					$.each(data,function (i,n) {
+						//alert(n.id+"  "+n.name);
+						html += "<option value='"+n.id+"'>" +n.name + "</option>";
+					})
+
+					//取得当前登录用户的id
+					//在js中使用el表达式，el表达式一定要套用在字符串中
+					var id = "${user.id}";
+
+					$("#create-owner").html(html);
+					//默认选择当前用户
+					$("#create-owner").val(id);
+
+					//处理完下拉框后，展现模态窗口
+					$("#createActivityModal").modal("show");
+
+				}
+			})
+
 		});
 		
 	});
@@ -51,12 +94,10 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					<form class="form-horizontal" role="form">
 					
 						<div class="form-group">
-							<label for="create-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
+							<label for="create-owner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-marketActivityOwner">
-								  <option>zhangsan</option>
-								  <option>lisi</option>
-								  <option>wangwu</option>
+								<select class="form-control" id="create-owner">
+
 								</select>
 							</div>
                             <label for="create-marketActivityName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
@@ -68,11 +109,11 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						<div class="form-group">
 							<label for="create-startTime" class="col-sm-2 control-label">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-startTime">
+								<input type="text" class="form-control time" id="create-startTime">
 							</div>
 							<label for="create-endTime" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-endTime">
+								<input type="text" class="form-control time" id="create-endTime">
 							</div>
 						</div>
                         <div class="form-group">
@@ -118,9 +159,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<label for="edit-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
 								<select class="form-control" id="edit-marketActivityOwner">
-								  <option>zhangsan</option>
-								  <option>lisi</option>
-								  <option>wangwu</option>
+
 								</select>
 							</div>
                             <label for="edit-marketActivityName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
