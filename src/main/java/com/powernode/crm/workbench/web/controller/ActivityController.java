@@ -46,10 +46,34 @@ public class ActivityController extends HttpServlet {
             pageList(req,resp);
 
         }else if("/workbench/activity/delete.do".equals(path)){
-            System.out.println("马上执行delete");
+
             delete(req,resp);
 
+        }else if("/workbench/activity/getUserListAndActivity.do".equals(path)){
+
+            getUserListAndActivity(req,resp);
+
         }
+    }
+
+    private void getUserListAndActivity(HttpServletRequest req, HttpServletResponse resp) {
+
+        System.out.println("进入到查询用户信息列表和根据市场活动信息查询单条");
+
+        String id = req.getParameter("id");
+
+        ActivityService as = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+
+        /*
+            分析：返回 uList和vo
+            因为此操作
+            复用率较低，使用map打包这两信息即可
+            Map<String,Object>
+         */
+        Map<String,Object> map = as.getUserListAndActivity(id);
+
+        PrintJson.printJsonObj(resp,map);
+
     }
 
     private void delete(HttpServletRequest req, HttpServletResponse resp) {

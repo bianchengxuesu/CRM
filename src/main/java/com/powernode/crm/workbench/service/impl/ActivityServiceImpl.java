@@ -1,5 +1,7 @@
 package com.powernode.crm.workbench.service.impl;
 
+import com.powernode.crm.settings.dao.UserDao;
+import com.powernode.crm.settings.domain.User;
 import com.powernode.crm.utils.SqlSessionUtil;
 import com.powernode.crm.vo.PaginationVO;
 import com.powernode.crm.workbench.dao.ActivityDao;
@@ -8,6 +10,7 @@ import com.powernode.crm.workbench.domain.Activity;
 import com.powernode.crm.workbench.domain.ActivityRemark;
 import com.powernode.crm.workbench.service.ActivityService;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +18,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     private ActivityDao activityDao = SqlSessionUtil.getSqlSession().getMapper(ActivityDao.class);
     private ActivityRemarkDao activityRemarkDao = SqlSessionUtil.getSqlSession().getMapper(ActivityRemarkDao.class);
+    private UserDao userDao = SqlSessionUtil.getSqlSession().getMapper(UserDao.class);
 
     @Override
     public boolean save(Activity a) {
@@ -71,5 +75,22 @@ public class ActivityServiceImpl implements ActivityService {
         }
 
         return flag;
+    }
+
+    @Override
+    public Map<String, Object> getUserListAndActivity(String id) {
+
+        //取uList
+        List<User> uList = userDao.getUserList();
+
+        //取a
+        Activity a = activityDao.getById(id);
+
+        //将uList和a打包到map中
+        Map<String,Object> map = new HashMap<String, Object>();
+        map.put("uList",uList);
+        map.put("a",a);
+
+        return map;
     }
 }

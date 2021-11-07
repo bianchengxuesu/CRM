@@ -5,6 +5,12 @@
 
 <mapper namespace="com.powernode.crm.workbench.dao.ActivityDao">
 
+    <select id="getById" resultType="Activity">
+
+        select * from tbl_activity where id=#{id}
+
+    </select>
+
     <delete id="delete">
 
         delete from tbl_activity
