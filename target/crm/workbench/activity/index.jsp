@@ -22,6 +22,10 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 <script type="text/javascript">
 
 	$(function(){
+
+		//页面加载完后的第一个方法
+		pageList(1,2);
+
 		//为全选的复选框绑定事件，触发全选操作
 		$("#quanxuan").click(function () {
 			//alert("123");
@@ -49,6 +53,63 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			$("#quanxuan").prop("checked",$("input[name=xz]").length==$("input[name=xz]:checked").length);
 
 		})
+
+		//为删除按钮绑定事件，执行市场删除操作
+		$("#deleteBtn").click(function () {
+
+			if(confirm("确认删除选中记录么？")){
+
+				//找到复选框中所有选中的jQuery对象 , 此处xz是一个数组， jQuery对象当作dom对象的数组
+				var $xz = $("input[name=xz]:checked");
+
+				if($xz.length==0){
+
+					alert("请选择需要删除的记录");
+
+					//一定选择了，可能1条，可能多条。
+				} else {
+					//url: workbench/activity/delete.do?id=xxx&id=xxx&id=xxx
+					// alert("123123123");
+
+					//拼接参数
+					var param = "";
+
+					for(var i = 0; i < $xz.length; i ++) {
+
+						param += "id=" + $($xz[i]).val(); //也可以写成 $xz[i].value()
+						//如果不是最后一个元素，追加一个 &
+						if(i < $xz.length-1) {
+							param += "&";
+						}
+
+					}
+
+					$.ajax({
+						url : "workbench/activity/delete.do",
+						data : param,
+						type : "post",
+						dataType : "json",
+						success : function (data) {
+
+							/*
+                                data: success : true/false
+                             */
+							if (data.success){
+								//删除成功后
+								pageList(1,2);
+							} else {
+								alert("删除市场活动失败");
+							}
+						}
+					})
+				}
+
+
+
+
+			}
+
+		});
 
 
 		$("#addBtn").click(function (){
@@ -127,7 +188,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					if(data.success){
 						//添加成功后
 						//刷新市场活动信息表，局部刷新
-
+						pageList(1,2);
 						//清空添加操作模态窗口的数据
 						/*
 							注意坑:
@@ -151,11 +212,11 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						alert("添加市场活动失败");
 					}
 				}
-			})
-		})
+			});
+		});
 
-		//页面加载完后的第一个方法
-		pageList(1,2);
+
+
 
 		$("#searchBtn").click(function () {
 
@@ -191,6 +252,9 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		以上为pageList方法制定了六个入口，也就是说，在以上6个操作执行完毕后，我们必须要调用pageList方法，刷新市场活动信息列表
 	 */
 	function pageList(pageNo,pageSize) {
+
+		//将全选框点灭
+		$("#quanxuan").prop("checked",false);
 
 		//查询前，将隐藏域中的信息取出，重新赋予搜素框
 		$("#search-name").val($.trim($("#hidden-name").val()));
@@ -230,7 +294,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 					html += '<tr class="active">';
 					html += '<td><input type="checkbox" name="xz" value="'+n.id+'"/></td>';
-					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'detail.html\';">'+n.name+'</a></td>';
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail.jsp\';">'+n.name+'</a></td>';
 					html += '<td>'+n.owner+'</td>';
 					html += '<td>'+n.startDate+'</td>';
 					html += '<td>'+n.endDate+'</td>';
@@ -266,9 +330,10 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				});
 
 			}
-		})
+		});
 
 	}
+
 </script>
 </head>
 <body>
@@ -471,7 +536,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					-->
 				  <button type="button" class="btn btn-primary" id="addBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" id="updateBtn"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
-				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+				  <button type="button" class="btn btn-danger" id="deleteBtn"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				
 			</div>

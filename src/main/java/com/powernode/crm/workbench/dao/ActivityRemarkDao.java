@@ -5,5 +5,9 @@ import com.powernode.crm.settings.domain.User;
 import java.util.Map;
 
 public interface ActivityRemarkDao {
-    User login(Map<String, String> map);
+    //User login(Map<String, String> map);
+
+    int getCountByAids(String[] ids);
+
+    int deleteByAids(String[] ids);
 }
