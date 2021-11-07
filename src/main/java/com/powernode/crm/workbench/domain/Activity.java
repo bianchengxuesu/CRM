@@ -1,17 +1,34 @@
 package com.powernode.crm.workbench.domain;
 
 public class Activity {
-    private String id;         //
-    private String owner;      //
-    private String name;       //
-    private String startDate;  //
-    private String endDate;    //
-    private String cost;       //
-    private String description;//
-    private String createTime; //
-    private String createBy;   //
-    private String editTime;   //
-    private String editBy;     //
+    private String id;         //id，32位
+    private String owner;      //拥有者的id，32位
+    private String name;       //活动名称，如：发传单
+    private String startDate;  //活动开始日期
+    private String endDate;    //活动结束日期
+    private String cost;       //活动成本
+    private String description;//描述
+    private String createTime; //创建时间
+    private String createBy;   //创建人
+    private String editTime;   //修改时间
+    private String editBy;     //修改人
+
+    @Override
+    public String toString() {
+        return "Activity{" +
+                "id='" + id + '\'' +
+                ", owner='" + owner + '\'' +
+                ", name='" + name + '\'' +
+                ", startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
+                ", cost='" + cost + '\'' +
+                ", description='" + description + '\'' +
+                ", createTime='" + createTime + '\'' +
+                ", createBy='" + createBy + '\'' +
+                ", editTime='" + editTime + '\'' +
+                ", editBy='" + editBy + '\'' +
+                '}';
+    }
 
     public String getId() {
         return id;

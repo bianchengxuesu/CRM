@@ -53,7 +53,71 @@ public class ActivityController extends HttpServlet {
 
             getUserListAndActivity(req,resp);
 
+        }else if("/workbench/activity/update.do".equals(path)){
+
+            update(req,resp);
+
+        }else if("/workbench/activity/detail.do".equals(path)){
+
+            detail(req,resp);
+
         }
+    }
+
+    private void detail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        System.out.println("进入到跳转到详细信息页的操作");
+
+        String id = req.getParameter("id");
+
+        ActivityService as = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+
+        Activity a = as.detail(id);
+
+        System.out.println(a);
+
+        req.setAttribute("a",a);
+
+        req.getRequestDispatcher("/workbench/activity/detail.jsp").forward(req,resp);
+
+    }
+
+    private void update(HttpServletRequest req, HttpServletResponse resp) {
+
+        System.out.println("执行市场活动的修改操作");
+
+        String id = req.getParameter("id");
+        String owner = req.getParameter("owner");
+        String name = req.getParameter("name");
+        String startDate = req.getParameter("startDate");
+        String endDate = req.getParameter("endDate");
+        String cost = req.getParameter("cost");
+        String description = req.getParameter("description");
+        //修改时间，当前系统时间
+        String editTime = DateTimeUtil.getSysTime();
+        //修改人：当前登录用户
+        String editBy = ((User)req.getSession().getAttribute("user")).getName();
+
+        Activity a = new Activity();
+        a.setId(id);
+        a.setCost(cost);
+        a.setStartDate(startDate);
+        a.setOwner(owner);
+        a.setName(name);
+        a.setId(id);
+        a.setEndDate(endDate);
+        a.setDescription(description);
+        a.setEditTime(editTime);
+        a.setEditBy(editBy);
+        a.setStartDate(startDate);
+
+        ActivityService as = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+
+        boolean flag = as.update(a);
+
+        PrintJson.printJsonFlag(resp,flag);
+
+
     }
 
     private void getUserListAndActivity(HttpServletRequest req, HttpServletResponse resp) {

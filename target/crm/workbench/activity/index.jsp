@@ -96,7 +96,10 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                              */
 							if (data.success){
 								//删除成功后
-								pageList(1,2);
+								// pageList(1,2);
+
+								pageList(1,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
+
 							} else {
 								alert("删除市场活动失败");
 							}
@@ -188,7 +191,18 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					if(data.success){
 						//添加成功后
 						//刷新市场活动信息表，局部刷新
-						pageList(1,2);
+						//pageList(1,2);
+
+						/*
+							$("#activityPage").bs_pagination( 'getOption ', 'currentPage ' ):
+								操作后停留在当前页
+							$("#activityPage").bs_pagination( ' getOption', 'rowsPerPage ' )
+								操作后维持已经设置好的每页展现的记录数
+							这两个参数不需要我们进行任何的修改操作
+							直接使用即可
+						*/
+						pageList(1,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
+
 						//清空添加操作模态窗口的数据
 						/*
 							注意坑:
@@ -295,6 +309,48 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				});
 			}
 		});
+
+		//为更新事件绑定事件，执行市场活动的修改操作
+		/*
+		* 	在开发中，我们为节省时间，修改操作一般都是copy添加操作
+		* */
+		$("#updateBtn").click(function () {
+			$.ajax({
+				url : "workbench/activity/update.do",
+				data : {
+
+					"id" : $.trim($("#edit-id").val()),
+					"owner" : $.trim($("#edit-owner").val()),
+					"name" : $.trim($("#edit-name").val()),
+					"startDate" : $.trim($("#edit-startDate").val()),
+					"endDate" : $.trim($("#edit-endDate").val()),
+					"cost" : $.trim($("#edit-cost").val()),
+					"description" : $.trim($("#edit-description").val())
+
+				},
+				type : "post", //增删改用post
+				dataType : "json",
+				success : function (data) {
+					/*
+						data {"success":true/false}
+					 */
+					if(data.success){
+						//修改成功后
+						//刷新市场活动信息表，局部刷新
+						// pageList(1,2);
+						//修改完后，维持在当前页，维持每页记录数
+						pageList($("#activityPage").bs_pagination('getOption', 'currentPage'),
+								$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
+
+						//关闭添加操作的模态窗口
+						$("#editActivityModal").modal("hide");
+
+					}else {
+						alert("修改市场活动失败");
+					}
+				}
+			});
+		})
 	});
 
 
@@ -357,7 +413,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 					html += '<tr class="active">';
 					html += '<td><input type="checkbox" name="xz" value="'+n.id+'"/></td>';
-					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail.jsp\';">'+n.name+'</a></td>';
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail.do?id='+n.id+'\';">'+n.name+'</a></td>';
 					html += '<td>'+n.owner+'</td>';
 					html += '<td>'+n.startDate+'</td>';
 					html += '<td>'+n.endDate+'</td>';
