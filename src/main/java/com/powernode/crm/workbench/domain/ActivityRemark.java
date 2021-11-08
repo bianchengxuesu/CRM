@@ -1,14 +1,14 @@
 package com.powernode.crm.workbench.domain;
 
 public class ActivityRemark {
-    private String id;          //
-    private String noteContent; //
-    private String createTime;  //
-    private String createBy;    //
-    private String editTime;    //
-    private String editBy;      //
-    private String editFlag;    //
-    private String activityId;  //
+    private String id;          //主键，uuid，自己的，跟activityId不同
+    private String noteContent; //备注信息
+    private String createTime;  //创建时间
+    private String createBy;    //创建人
+    private String editTime;    //修改时间
+    private String editBy;      //修改人
+    private String editFlag;    //修改标记，1为修改过，0未修改
+    private String activityId;  //活动id
 
     public String getId() {
         return id;
