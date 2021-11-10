@@ -21,6 +21,10 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 	$(function(){
 
+
+		//进页面就读取列表,暂未写分页
+		pageList(1,2);
+
 		//为创建按钮绑定事件
 		$("#addBtn").click(function () {
 
@@ -106,6 +110,9 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						//关闭模态窗口
 						$("#createClueModal").modal("hide");
 
+						//更新页面列表
+						pageList(1,2);
+
 					}else {
 						alert("添加线索失败");
 					}
@@ -115,6 +122,95 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		});
 		
 	});
+
+	function pageList(pageNo,pageSize) {
+
+		//将全选框点灭
+		$("#quanxuan").prop("checked",false);
+
+		//清空之前的内容
+		$("#activityBody").html("");
+
+		//alert("展现列表");
+		$.ajax({
+			url : "workbench/clue/pageList.do",
+			data : {
+				"pageNo" : pageNo,
+				"pageSize" : pageSize
+			},
+			type : "get",
+			dataType : "json",
+			success : function (data) {
+				/*
+
+					data
+						我们需要的 [{clue1}，{2}，{3}，] List<Clue> clueList
+
+						//分页先不写
+						{"total":100}  int total
+						总data: {"total":100,"dataList":[{clue1}，{clue2}，{clue3}]}
+
+				 */
+
+
+				var html = "";
+
+				//每个n就是一个
+				$.each(data,function (i,n) {
+
+					html += '<tr>';
+					html += '<td><input type="checkbox" /></td> ';																					//'+n.id+'\';"
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/clue/detail.do?id='+n.id+'\';">'+n.fullname+'</a></td>';
+					html += '<td>'+n.company+'</td>';
+					html += '<td>'+n.phone+'</td>';
+					html += '<td>'+n.mphone+'</td>';
+					html += '<td>'+n.source+'</td>';
+					html += '<td>'+n.owner+'</td>';
+					html += '<td>'+n.state+'</td>';
+					html += '</tr>';
+
+					/*html += '<tr class="active">';
+					html += '<td><input type="checkbox" name="xz" value="'+n.id+'"/></td>';
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail.do?id='+n.id+'\';">'+n.name+'</a></td>';
+					html += '<td>'+n.owner+'</td>';
+					html += '<td>'+n.startDate+'</td>';
+					html += '<td>'+n.endDate+'</td>';
+					html += '</tr>';*/
+
+				})
+
+
+				$("#activityBody").html(html);
+
+				//总页数
+				//var totalPages = data.total%pageSize==0?data.total/pageSize:parseInt(data.total/pageSize)+1;
+
+
+				//数据处理完毕，结合分页查询，对前端展现分页信息
+				/*$("#activityPage").bs_pagination({
+					currentPage: pageNo, // 页码
+					rowsPerPage: pageSize, // 每页显示的记录条数
+					maxRowsPerPage: 20, // 每页最多显示的记录条数
+					totalPages: totalPages, // 总页数
+					totalRows: data.total, // 总记录条数
+
+					visiblePageLinks: 3, // 显示几个卡片
+
+					showGoToPage: true,
+					showRowsPerPage: true,
+					showRowsInfo: true,
+					showRowsDefaultInfo: true,
+
+					//回调函数在点击分页时触发
+					onChangePage : function(event, data){
+						pageList(data.currentPage , data.rowsPerPage);
+					}
+				});*/
+
+			}
+		});
+
+	}
 	
 </script>
 </head>
@@ -526,7 +622,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				<table class="table table-hover">
 					<thead>
 						<tr style="color: #B3B3B3;">
-							<td><input type="checkbox" /></td>
+							<td><input type="checkbox" id="quanxuan"/></td>
 							<td>名称</td>
 							<td>公司</td>
 							<td>公司座机</td>
@@ -536,27 +632,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<td>线索状态</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/clue/detail.jsp';">李四先生</a></td>
-							<td>动力节点</td>
-							<td>010-84846003</td>
-							<td>12345678901</td>
-							<td>广告</td>
-							<td>zhangsan</td>
-							<td>已联系</td>
-						</tr>
-                        <tr class="active">
-                            <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">李四先生</a></td>
-                            <td>动力节点</td>
-                            <td>010-84846003</td>
-                            <td>12345678901</td>
-                            <td>广告</td>
-                            <td>zhangsan</td>
-                            <td>已联系</td>
-                        </tr>
+					<tbody id="activityBody">
+
 					</tbody>
 				</table>
 			</div>

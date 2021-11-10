@@ -43,4 +43,20 @@ public class ClueServiceImpl implements ClueService {
 
         return flag;
     }
+
+    @Override
+    public List<Clue> getAllClues() {
+
+        List<Clue> list = clueDao.getAllClues();
+
+        return list;
+    }
+
+    @Override
+    public Clue detail(String id) {
+
+        Clue c = clueDao.getClueById(id);
+
+        return c;
+    }
 }

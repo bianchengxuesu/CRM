@@ -11,4 +11,7 @@ public interface ClueService {
 
     boolean save(Clue c);
 
+    List<Clue> getAllClues();
+
+    Clue detail(String id);
 }

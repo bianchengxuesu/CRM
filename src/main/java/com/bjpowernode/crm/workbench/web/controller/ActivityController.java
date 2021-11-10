@@ -269,7 +269,7 @@ public class ActivityController extends HttpServlet {
         String owner = req.getParameter( "owner" );
         String startDate = req.getParameter( "startDate" );
         String endDate = req.getParameter( "endDate");
-        String pageNoStr = req.getParameter("pageNo" ) ;
+        String pageNoStr = req.getParameter("pageNo" );
         int pageNo = Integer.valueOf(pageNoStr);
         //每页展现的记录数
         String pagesizeStr = req.getParameter( "pageSize");

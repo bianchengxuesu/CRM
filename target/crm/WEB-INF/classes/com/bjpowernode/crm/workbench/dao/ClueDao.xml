@@ -4,7 +4,74 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bjpowernode.crm.workbench.dao.ClueDao">
-	
+
+    <select id="getClueById" resultType="clue">
+
+         select
+
+        clue.id,
+        clue.fullname,
+        clue.appellation,
+        user.name as owner,
+        clue.company,
+        clue.job,
+        clue.email,
+        clue.phone,
+        clue.website,
+        clue.mphone,
+        clue.state,
+        clue.source,
+        clue.createBy,
+        clue.createTime,
+        clue.editBy,
+        clue.editTime,
+        clue.description,
+        clue.contactSummary,
+        clue.nextContactTime,
+        clue.address
+
+         from tbl_clue clue
+         join tbl_user user
+         on clue.owner=user.id
+
+         where clue.id=#{id}
+
+    </select>
+
+    <select id="getAllClues" resultType="clue">
+
+        select
+
+        clue.id,
+        clue.fullname,
+        clue.appellation,
+        user.name as owner,
+        clue.company,
+        clue.job,
+        clue.email,
+        clue.phone,
+        clue.website,
+        clue.mphone,
+        clue.state,
+        clue.source,
+        clue.createBy,
+        clue.createTime,
+        clue.editBy,
+        clue.editTime,
+        clue.description,
+        clue.contactSummary,
+        clue.nextContactTime,
+        clue.address
+
+
+
+         from tbl_clue clue
+         join tbl_user user
+         on clue.owner=user.id
+
+
+    </select>
+
 	<insert id="save">
 
         insert  into tbl_clue(

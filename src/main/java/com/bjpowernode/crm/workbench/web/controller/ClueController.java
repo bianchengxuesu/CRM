@@ -29,6 +29,7 @@ public class ClueController extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         System.out.println("进入线索控制器");
 
         String path = req.getServletPath();
@@ -43,7 +44,43 @@ public class ClueController extends HttpServlet {
 
             save(req,resp);
             
+        }else if("/workbench/clue/pageList.do".equals(path)){
+
+            pageList(req,resp);
+
+        }else if("/workbench/clue/detail.do".equals(path)){
+
+            detail(req,resp);
+
         }
+    }
+
+    private void detail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        System.out.println("进入到线索详细页面");
+
+        String id = req.getParameter("id");
+
+        ClueService cs = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+
+        Clue c = cs.detail(id);
+
+        req.setAttribute("c",c);
+
+        req.getRequestDispatcher("/workbench/clue/detail.jsp").forward(req,resp);
+
+    }
+
+    private void pageList(HttpServletRequest req, HttpServletResponse resp) {
+
+        System.out.println("进入列表查询操作");
+
+        ClueService cs = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+
+        List<Clue> clueList = cs.getAllClues();
+
+        PrintJson.printJsonObj(resp,clueList);
+
     }
 
     private void save(HttpServletRequest req, HttpServletResponse resp) {
