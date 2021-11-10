@@ -5,7 +5,55 @@
 
 <mapper namespace="com.bjpowernode.crm.workbench.dao.ClueDao">
 	
-	
+	<insert id="save">
+
+        insert  into tbl_clue(
+
+            id,
+            fullname,
+            appellation,
+            owner,
+            company,
+            job,
+            website,
+            mphone,
+            email,
+            phone,
+            state,
+            source,
+            description,
+            contactSummary,
+            nextContactTime,
+            address,
+            createTime,
+            createBy
+
+        )
+
+        values (
+
+            #{id},
+            #{fullname},
+            #{appellation},
+            #{owner},
+            #{company},
+            #{job},
+            #{website},
+            #{mphone},
+            #{email},
+            #{phone},
+            #{state},
+            #{source},
+            #{description},
+            #{contactSummary},
+            #{nextContactTime},
+            #{address},
+            #{createTime},
+            #{createBy}
+
+        )
+
+    </insert>
   	
 </mapper>
 

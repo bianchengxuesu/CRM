@@ -34,6 +34,11 @@
     <url-pattern>*.jsp</url-pattern>
   </filter-mapping>
 
+  <!-- 监听器注册在过滤器底下 -->
+  <listener>
+    <listener-class>com.bjpowernode.crm.web.listener.SysInitListener</listener-class>
+  </listener>
+
   <!--用户登录控制器-->
   <servlet>
     <servlet-name>UserController</servlet-name>
@@ -67,11 +72,13 @@
   <!--线索控制器-->
   <servlet>
     <servlet-name>ClueController</servlet-name>
-    <servlet-class>com.bjpowernode.crm.workbench.web.controller.ActivityController</servlet-class>
+    <servlet-class>com.bjpowernode.crm.workbench.web.controller.ClueController</servlet-class>
   </servlet>
   <servlet-mapping>
   <servlet-name>ClueController</servlet-name>
   <url-pattern>/workbench/clue/xxx.do</url-pattern>
+  <url-pattern>/workbench/clue/save.do</url-pattern>
+  <url-pattern>/workbench/clue/getUserList.do</url-pattern>
   </servlet-mapping>
   
   

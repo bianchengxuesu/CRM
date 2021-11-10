@@ -9,6 +9,7 @@ import com.bjpowernode.crm.workbench.dao.ActivityRemarkDao;
 import com.bjpowernode.crm.workbench.dao.ClueDao;
 import com.bjpowernode.crm.workbench.domain.Activity;
 import com.bjpowernode.crm.workbench.domain.ActivityRemark;
+import com.bjpowernode.crm.workbench.domain.Clue;
 import com.bjpowernode.crm.workbench.service.ActivityService;
 import com.bjpowernode.crm.workbench.service.ClueService;
 
@@ -25,5 +26,21 @@ public class ClueServiceImpl implements ClueService {
     @Override
     public boolean deleteById(String id) {
         return false;
+    }
+
+    @Override
+    public boolean save(Clue c) {
+
+        boolean flag = true;
+
+        int count = clueDao.save(c);
+
+        if(count != 1){
+
+            flag = false;
+
+        }
+
+        return flag;
     }
 }
