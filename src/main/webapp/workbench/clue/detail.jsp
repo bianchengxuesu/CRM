@@ -72,7 +72,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					url : "workbench/clue/getActivityListByNameAndNotByClueId.do",
 					data : {
 						"aname" : $.trim($("#aname").val()),
-						"cludId" : "${c.id}"
+						"clueId" : "${c.id}"
 					},
 					type : "get",
 					dataType : "json",
@@ -108,6 +108,71 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			
 		})
 
+
+		//为关联按钮绑定事件，执行关联表的添加操作
+		$("#bundBtn").click(function () {
+
+			var $xz = $("input[name=xuanze]:checked");
+
+			if($xz.length==0){
+
+				alert("请选择需要关联的市场活动");
+
+			}else {
+
+				//传递值通过 bund.do?clueId=xxx&aid=xxx&aid=xxx 这种方式
+				var param = "cid=${c.id}&";
+
+				for (var i = 0; i < $xz.length; i ++){
+
+					param += "aid="+$($xz[i]).val();
+
+					if(i < $xz.length-1) {
+						param += "&";
+					}
+
+				}
+
+				$.ajax({
+					url : "workbench/clue/bund.do",
+					data : param,
+					type : "post",
+					dataType : "json",
+					success : function (data) {
+
+						/*
+                            data:
+                            	{"success":true/false}
+                         */
+
+						if(data.success){
+
+							//关联成功，刷新关联市场活动的列表
+							showActivityList();
+
+							//清空搜索框的信息  复选框中的√干掉  清空activitySearchBody
+							$("#aname").val("");
+							$("#quanxuan").prop("checked",false);
+							$("#activitySearchBody").html("");
+
+							//关闭模态窗口
+							$("#bundModal").modal("hide");
+
+							//重新加载关联列表
+							showActivityList();
+
+						}else {
+
+							alert("关联市场活动失败");
+
+						}
+
+					}
+				})
+
+			}
+			
+		})
 	});
 
 	function showActivityList() {
@@ -205,7 +270,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					<table id="activityTable" class="table table-hover" style="width: 900px; position: relative;top: 10px;">
 						<thead>
 							<tr style="color: #B3B3B3;">
-								<td><input type="checkbox"/></td>
+								<td><input type="checkbox" id="quanxuan"/></td>
 								<td>名称</td>
 								<td>开始日期</td>
 								<td>结束日期</td>
@@ -220,7 +285,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">关联</button>
+					<button type="button" class="btn btn-primary" id="bundBtn">关联</button>
 				</div>
 			</div>
 		</div>

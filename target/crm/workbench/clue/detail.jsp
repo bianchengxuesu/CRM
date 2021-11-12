@@ -55,6 +55,124 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		//页面加载完成后，取出关联的市场活动信息列表
 		showActivityList();
 
+		//为关联市场活动模态窗口中的搜索框绑定事件，按下回车就查询并展现市场活动列表
+		$("#aname").keydown(function (event) {
+
+			//按下回车键
+			if(event.keyCode==13){
+
+				/*
+					在模态窗口中，默认按下回车就刷新页面
+					所有，我们在展现完列表后，将模态窗口的回车行为禁用掉
+
+					注意：我们只查询当前还没有关联的活动，不展示已经关联的活动
+				 */
+
+				$.ajax({
+					url : "workbench/clue/getActivityListByNameAndNotByClueId.do",
+					data : {
+						"aname" : $.trim($("#aname").val()),
+						"clueId" : "${c.id}"
+					},
+					type : "get",
+					dataType : "json",
+					success : function (data) {
+
+						/*
+                            data:
+                                [{市场活动1}，{市场活动2}，{市场活动3}]
+                         */
+
+						var html = "";
+
+						$.each(data,function (i,n) {
+
+							html += '<tr>';
+							html += '<td><input type="checkbox" name="xuanze" value="'+n.id+'"/></td>';
+							html += '<td>'+n.name+'</td>';
+							html += '<td>'+n.startDate+'</td>';
+							html += '<td>'+n.endDate+'</td>';
+							html += '<td>'+n.owner+'</td>';
+							html += '</tr>';
+
+						})
+
+						$("#activitySearchBody").html(html);
+
+					}
+				})
+
+				return false;
+
+			}
+			
+		})
+
+
+		//为关联按钮绑定事件，执行关联表的添加操作
+		$("#bundBtn").click(function () {
+
+			var $xz = $("input[name=xuanze]:checked");
+
+			if($xz.length==0){
+
+				alert("请选择需要关联的市场活动");
+
+			}else {
+
+				//传递值通过 bund.do?clueId=xxx&aid=xxx&aid=xxx 这种方式
+				var param = "cid=${c.id}&";
+
+				for (var i = 0; i < $xz.length; i ++){
+
+					param += "aid="+$($xz[i]).val();
+
+					if(i < $xz.length-1) {
+						param += "&";
+					}
+
+				}
+
+				$.ajax({
+					url : "workbench/clue/bund.do",
+					data : param,
+					type : "post",
+					dataType : "json",
+					success : function (data) {
+
+						/*
+                            data:
+                            	{"success":true/false}
+                         */
+
+						if(data.success){
+
+							//关联成功，刷新关联市场活动的列表
+							showActivityList();
+
+							//清空搜索框的信息  复选框中的√干掉  清空activitySearchBody
+							$("#aname").val("");
+							$("#quanxuan").prop("checked",false);
+							$("#activitySearchBody").html("");
+
+							//关闭模态窗口
+							$("#bundModal").modal("hide");
+
+							//重新加载关联列表
+							showActivityList();
+
+						}else {
+
+							alert("关联市场活动失败");
+
+						}
+
+					}
+				})
+
+			}
+			
+		})
 	});
 
 	function showActivityList() {
@@ -144,7 +262,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
 						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
+						    <input type="text" class="form-control" id="aname" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
 						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
 						  </div>
 						</form>
@@ -152,7 +270,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					<table id="activityTable" class="table table-hover" style="width: 900px; position: relative;top: 10px;">
 						<thead>
 							<tr style="color: #B3B3B3;">
-								<td><input type="checkbox"/></td>
+								<td><input type="checkbox" id="quanxuan"/></td>
 								<td>名称</td>
 								<td>开始日期</td>
 								<td>结束日期</td>
@@ -160,27 +278,14 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 								<td></td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
+						<tbody id="activitySearchBody">
+
 						</tbody>
 					</table>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">关联</button>
+					<button type="button" class="btn btn-primary" id="bundBtn">关联</button>
 				</div>
 			</div>
 		</div>

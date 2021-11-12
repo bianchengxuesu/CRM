@@ -1,7 +1,11 @@
 package com.bjpowernode.crm.workbench.dao;
 
+import com.bjpowernode.crm.workbench.domain.ClueActivityRelation;
+
 public interface ClueActivityRelationDao {
 
 
     int unbund(String relationId);
+
+    int bund(ClueActivityRelation car);
 }
