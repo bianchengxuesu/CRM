@@ -51,7 +51,132 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		$(".myHref").mouseout(function(){
 			$(this).children("span").css("color","#E6E6E6");
 		});
+
+		//页面加载完成后，取出关联的市场活动信息列表
+		showActivityList();
+
+		//为关联市场活动模态窗口中的搜索框绑定事件，按下回车就查询并展现市场活动列表
+		$("#aname").keydown(function (event) {
+
+			//按下回车键
+			if(event.keyCode==13){
+
+				/*
+					在模态窗口中，默认按下回车就刷新页面
+					所有，我们在展现完列表后，将模态窗口的回车行为禁用掉
+
+					注意：我们只查询当前还没有关联的活动，不展示已经关联的活动
+				 */
+
+				$.ajax({
+					url : "workbench/clue/getActivityListByNameAndNotByClueId.do",
+					data : {
+						"aname" : $.trim($("#aname").val()),
+						"cludId" : "${c.id}"
+					},
+					type : "get",
+					dataType : "json",
+					success : function (data) {
+
+						/*
+                            data:
+                                [{市场活动1}，{市场活动2}，{市场活动3}]
+                         */
+
+						var html = "";
+
+						$.each(data,function (i,n) {
+
+							html += '<tr>';
+							html += '<td><input type="checkbox" name="xuanze" value="'+n.id+'"/></td>';
+							html += '<td>'+n.name+'</td>';
+							html += '<td>'+n.startDate+'</td>';
+							html += '<td>'+n.endDate+'</td>';
+							html += '<td>'+n.owner+'</td>';
+							html += '</tr>';
+
+						})
+
+						$("#activitySearchBody").html(html);
+
+					}
+				})
+
+				return false;
+
+			}
+			
+		})
+
 	});
+
+	function showActivityList() {
+
+		$.ajax({
+			url : "workbench/clue/getActivityListByClueId.do",
+			data : {
+				"cludId" : "${c.id}"
+			},
+			type : "get",
+			dataType : "json",
+			success : function (data) {
+
+				/*
+					data:
+						[{市场活动1}，{市场活动2}，{市场活动3}]
+				 */
+
+				var html = "";
+
+				$.each(data,function (i,n) {
+
+					html += '<tr>';
+					html += '<td>'+n.name+'</td>';
+					html += '<td>'+n.startDate+'</td>';
+					html += '<td>'+n.endDate+'</td>';
+					html += '<td>'+n.owner+'</td>';
+					html += '<td><a href="javascript:void(0);" onclick="unbund(\''+n.id+'\')" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>';
+					html += '</tr>';
+
+				})
+
+				$("#activityBody").html(html);
+
+			}
+		})
+	}
+
+	function unbund(id) {
+		/*
+				id: 想要一个关联表的id，方便解除关联
+		 */
+		$.ajax({
+			url : "workbench/clue/unbund.do",
+			data : {
+				"id" : id
+			},
+			type : "post",
+			dataType : "json",
+			success : function (data) {
+				/*
+					data : {"success":true/false}
+				 */
+				if(data.success){
+
+					//先清空再查就行
+					$("#activityBody").html("");
+
+					//再查询一遍即可
+					showActivityList();
+
+				}else {
+
+					alert("接触关联失败")
+
+				}
+			}
+		})
+	}
 	
 </script>
 
@@ -72,7 +197,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
 						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
+						    <input type="text" class="form-control" id="aname" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
 						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
 						  </div>
 						</form>
@@ -88,21 +213,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 								<td></td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
+						<tbody id="activitySearchBody">
+
 						</tbody>
 					</table>
 				</div>
@@ -429,21 +541,15 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<td></td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
+					<tbody id="activityBody">
+
+						<%--<tr>
 							<td>发传单</td>
 							<td>2020-10-10</td>
 							<td>2020-10-20</td>
 							<td>zhangsan</td>
 							<td><a href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
-						</tr>
-						<tr>
-							<td>发传单</td>
-							<td>2020-10-10</td>
-							<td>2020-10-20</td>
-							<td>zhangsan</td>
-							<td><a href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
-						</tr>
+						</tr>--%>
 					</tbody>
 				</table>
 			</div>

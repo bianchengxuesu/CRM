@@ -42,7 +42,6 @@ public class SysInitListener implements ServletContextListener {
             application.setAttribute(key,map.get(key));
 
         }
-            
 
 
     }

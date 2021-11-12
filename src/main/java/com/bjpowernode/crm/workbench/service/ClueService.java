@@ -1,5 +1,6 @@
 package com.bjpowernode.crm.workbench.service;
 
+import com.bjpowernode.crm.workbench.domain.Activity;
 import com.bjpowernode.crm.workbench.domain.Clue;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface ClueService {
     List<Clue> getAllClues();
 
     Clue detail(String id);
+
+    boolean unbund(String id);
 }

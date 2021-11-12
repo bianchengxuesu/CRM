@@ -6,6 +6,7 @@ import com.bjpowernode.crm.utils.SqlSessionUtil;
 import com.bjpowernode.crm.vo.PaginationVO;
 import com.bjpowernode.crm.workbench.dao.ActivityDao;
 import com.bjpowernode.crm.workbench.dao.ActivityRemarkDao;
+import com.bjpowernode.crm.workbench.dao.ClueActivityRelationDao;
 import com.bjpowernode.crm.workbench.dao.ClueDao;
 import com.bjpowernode.crm.workbench.domain.Activity;
 import com.bjpowernode.crm.workbench.domain.ActivityRemark;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class ClueServiceImpl implements ClueService {
 
     private ClueDao clueDao = SqlSessionUtil.getSqlSession().getMapper(ClueDao.class);
+    private ClueActivityRelationDao clueActivityRelationDao = SqlSessionUtil.getSqlSession().getMapper(ClueActivityRelationDao.class);
 //    private ActivityRemarkDao activityRemarkDao = SqlSessionUtil.getSqlSession().getMapper(ActivityRemarkDao.class);
 //    private UserDao userDao = SqlSessionUtil.getSqlSession().getMapper(UserDao.class);
 
@@ -59,4 +61,22 @@ public class ClueServiceImpl implements ClueService {
 
         return c;
     }
+
+    @Override
+    public boolean unbund(String id) {
+
+        boolean flag = true;
+
+        int count = clueActivityRelationDao.unbund(id);
+
+        if (count!=1){
+
+            flag = false;
+
+        }
+
+        return flag;
+
+    }
+
 }

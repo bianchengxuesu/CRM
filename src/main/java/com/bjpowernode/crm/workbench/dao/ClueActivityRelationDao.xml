@@ -5,7 +5,12 @@
 
 <mapper namespace="com.bjpowernode.crm.workbench.dao.ClueActivityRelationDao">
 	
-	
+    <delete id="unbund">
+
+        delete from tbl_clue_activity_relation
+        where id=#{relationId}
+
+    </delete>
   	
 </mapper>
 
