@@ -68,8 +68,48 @@ public class ClueController extends HttpServlet {
 
             bund(req,resp);
 
+        }else if("/workbench/clue/getActivityListByName.do".equals(path)){
+
+            getActivityListByName(req,resp);
+
+        }else if("/workbench/clue/convert.do".equals(path)){
+
+            convert(req,resp);
+
         }
 
+
+    }
+
+    private void convert(HttpServletRequest req, HttpServletResponse resp) {
+
+        System.out.println("执行线索转换的操作");
+
+        String clueId = req.getParameter("clueId");
+
+        //接收是否需要创建交易的标记
+        String flag = req.getParameter("flag");
+
+        if("a".equals(flag)){
+
+            //接收交易表单的参数
+
+
+        }
+
+    }
+
+    private void getActivityListByName(HttpServletRequest req, HttpServletResponse resp) {
+
+        System.out.println("查询市场活动列表（根据名称模糊查询）");
+
+        String aname = req.getParameter("aname");
+
+        ActivityService as = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+
+        List<Activity> aList = as.getActivityListByName(aname);
+
+        PrintJson.printJsonObj(resp,aList);
 
     }
 

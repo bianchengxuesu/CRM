@@ -5,6 +5,34 @@
 
 <mapper namespace="com.bjpowernode.crm.workbench.dao.ActivityDao">
 
+    <select id="getActivityListByNameAndNotByClueId"
+            resultType="com.bjpowernode.crm.workbench.domain.Activity">
+
+        select
+
+        a.id,
+        a.name,
+        a.startDate,
+        a.endDate,
+        u.name as owner
+
+        from tbl_activity a
+        join tbl_user u
+        on a.owner=u.id
+
+        where a.name like '%' #{aname} '%' and a.id not in(
+
+            select
+
+            activityId
+
+            from tbl_clue_activity_relation
+
+            where clueId=#{clueId}
+
+        )
+
+    </select>
 
     <select id="getActivityListByClueId" resultType="Activity">
 
@@ -177,34 +205,7 @@
 
     </select>
 
-    <select id="getActivityListByNameAndNotByClueId"
-            resultType="com.bjpowernode.crm.workbench.domain.Activity">
 
-        select
-
-        a.id,
-        a.name,
-        a.startDate,
-        a.endDate,
-        u.name as owner
-
-        from tbl_activity a
-        join tbl_user u
-        on a.owner=u.id
-
-        where a.name like '%' #{aname} '%' and a.id not in(
-
-            select
-
-            activityId
-
-            from tbl_clue_activity_relation
-
-            where clueId=#{clueId}
-
-        )
-
-    </select>
 
     <insert id="save">
 
@@ -232,8 +233,27 @@
         )
 
     </insert>
-	
-	
+
+
+    <select id="getActivityListByName" resultType="Activity">
+
+        select
+
+        a.id,
+        a.name,
+        a.startDate,
+        a.endDate,
+        u.name as owner
+
+        from tbl_activity a
+        join tbl_user u
+        on a.owner=u.id
+
+        where a.name like '%' #{aname} '%'
+
+    </select>
+
+
 </mapper>
 
 
