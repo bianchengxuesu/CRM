@@ -11,6 +11,7 @@ import com.bjpowernode.crm.vo.PaginationVO;
 import com.bjpowernode.crm.workbench.domain.Activity;
 import com.bjpowernode.crm.workbench.domain.ActivityRemark;
 import com.bjpowernode.crm.workbench.domain.Clue;
+import com.bjpowernode.crm.workbench.domain.Tran;
 import com.bjpowernode.crm.workbench.service.ActivityService;
 import com.bjpowernode.crm.workbench.service.ClueService;
 import com.bjpowernode.crm.workbench.service.impl.ActivityServiceImpl;
@@ -81,7 +82,7 @@ public class ClueController extends HttpServlet {
 
     }
 
-    private void convert(HttpServletRequest req, HttpServletResponse resp) {
+    private void convert(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         System.out.println("执行线索转换的操作");
 
@@ -90,10 +91,42 @@ public class ClueController extends HttpServlet {
         //接收是否需要创建交易的标记
         String flag = req.getParameter("flag");
 
+        //创建交易
+        Tran t = null;
+
+        String createBy = ((User)req.getSession().getAttribute("user")).getName();
+
         if("a".equals(flag)){
 
-            //接收交易表单的参数
+            t = new Tran();
 
+            //接收交易表单的参数
+            String money = req.getParameter("money");
+            String name = req.getParameter("name");
+            String expectedDate = req.getParameter("expectedDate");
+            String stage = req.getParameter("stage");
+            String activityId = req.getParameter("activityId");
+            String id = UUIDUtil.getUUID();
+            String createTime = DateTimeUtil.getSysTime();
+
+            t.setMoney(money);
+            t.setActivityId(activityId);
+            t.setName(name);
+            t.setExpectedDate(expectedDate);
+            t.setStage(stage);
+            t.setId(id);
+            t.setCreateBy(createBy);
+            t.setCreateTime(createTime);
+
+        }
+
+        ClueService cs = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+
+        boolean flag1 =  cs.convert(clueId,t,createBy);
+
+        if (flag1) {
+
+            resp.sendRedirect(req.getContextPath()+"/workbench/clue/index.jsp");
 
         }
 

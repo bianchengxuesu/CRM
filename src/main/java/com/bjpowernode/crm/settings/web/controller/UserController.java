@@ -19,7 +19,7 @@ public class UserController extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("进入用户控制器"+"123");
+        System.out.println("进入用户控制器");
         String path = req.getServletPath();
 
         if ("/settings/user/login.do".equals(path)){
@@ -30,7 +30,7 @@ public class UserController extends HttpServlet {
     }
 
     private void login(HttpServletRequest req, HttpServletResponse resp) {
-        System.out.println("进入验证登录操作"+"456");
+        System.out.println("进入验证登录操作");
         String loginAct = req.getParameter("loginAct");
         String loginPwd = req.getParameter("loginPwd");
 
@@ -47,7 +47,9 @@ public class UserController extends HttpServlet {
         try {
             User user = us.login(loginAct,loginPwd,IP);
 
+            //在这一步将user对象放入session中
             req.getSession().setAttribute("user",user);
+
             //如果程序执行到此，说明业务层没有为controller抛出异常
             //表示登录成功
             PrintJson.printJsonFlag(resp,true);

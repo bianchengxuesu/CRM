@@ -13,4 +13,8 @@ public interface ClueDao {
     List<Clue> getAllClues();
 
     Clue getClueById(String id);
+
+    Clue getById(String clueId);
+
+    int delete(String clueId);
 }
