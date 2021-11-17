@@ -88,6 +88,8 @@ public class ClueController extends HttpServlet {
 
         String clueId = req.getParameter("clueId");
 
+        System.out.println("ClueID::::::"+clueId);
+
         //接收是否需要创建交易的标记
         String flag = req.getParameter("flag");
 
@@ -119,6 +121,8 @@ public class ClueController extends HttpServlet {
             t.setCreateTime(createTime);
 
         }
+
+        //System.out.println(t.toString());
 
         ClueService cs = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
 

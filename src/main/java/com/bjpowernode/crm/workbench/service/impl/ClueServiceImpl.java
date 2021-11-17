@@ -213,7 +213,7 @@ public class ClueServiceImpl implements ClueService {
             contactsRemark.setContactsId(con.getId());
             contactsRemark.setEditFlag("0");
             contactsRemark.setNoteContent(noteContent);
-            int count4 = contactsRemarkDao.save(customerRemark);
+            int count4 = contactsRemarkDao.save(contactsRemark);
             if (count4 != 1) {
                 flag = false;
             }
@@ -256,6 +256,7 @@ public class ClueServiceImpl implements ClueService {
             t.setCustomerId(cus.getId());
             t.setContactSummary(c.getContactSummary());
             t.setContactsId(con.getId());
+
             //添加交易
             int count6 = tranDao.save(t);
             if (count6 != 1) {

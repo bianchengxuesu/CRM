@@ -5,6 +5,20 @@
 
 <mapper namespace="com.bjpowernode.crm.workbench.dao.ClueDao">
 
+    <select id="getById" resultType="clue">
+
+        select * from tbl_clue where id=#{id}
+
+    </select>
+
+    <delete id="delete">
+
+        delete from tbl_clue where id=#{id}
+
+    </delete>
+
+
+
     <select id="getClueById" resultType="clue">
 
          select
@@ -72,7 +86,8 @@
 
     </select>
 
-	<insert id="save">
+
+    <insert id="save">
 
         insert  into tbl_clue(
 

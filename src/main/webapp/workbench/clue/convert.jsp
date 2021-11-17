@@ -146,7 +146,7 @@ String owner = request.getParameter("owner");*/
 
 				//不需要创建交易
 				//直接跳转即可，只需传递一个clueId
-				window.location.href = "workbench/clue/convert.do?clueId=}";
+				window.location.href = "workbench/clue/convert.do?clueId=${param.id}";
 
 			}
 
