@@ -37,5 +37,15 @@
         String createTime = DateTimeUtil.getSysTime();
         //创建人：当前登录用户
         String createBy = ((User)req.getSession().getAttribute("user")).getName();
+
+        //日历组件
+        $(".time").datetimepicker({
+        minView: "month",
+        language:  'zh-CN',
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        todayBtn: true,
+        pickerPosition: "bottom-left"
+        });
 </body>
 </html>

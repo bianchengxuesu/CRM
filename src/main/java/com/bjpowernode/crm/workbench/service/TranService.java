@@ -1,12 +1,9 @@
-package com.bjpowernode.crm.workbench.dao;
+package com.bjpowernode.crm.workbench.service;
 
 import com.bjpowernode.crm.workbench.domain.Contacts;
 
 import java.util.List;
 
-public interface ContactsDao {
-
+public interface TranService {
     List<Contacts> getContactsListByName(String cname);
-
-    int save(Contacts con);
 }

@@ -5,6 +5,11 @@
 
 <mapper namespace="com.bjpowernode.crm.workbench.dao.ContactsDao">
 
+    <select id="getContactsListByName" resultType="contacts">
+
+        select * from tbl_contacts where fullname like '%' #{cname} '%'
+
+    </select>
 
     <insert id="save">
 
