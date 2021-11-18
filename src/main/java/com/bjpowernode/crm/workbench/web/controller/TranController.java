@@ -56,6 +56,10 @@ public class TranController extends HttpServlet {
 
             getCustomerName(req,resp);
 
+        }else if("/workbench/transaction/save.do".equals(path)){
+
+            save(req,resp);
+
         }
 
 
@@ -151,9 +155,60 @@ public class TranController extends HttpServlet {
 
     }
 
-    private void save(HttpServletRequest req, HttpServletResponse resp) {
+    private void save(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
-        System.out.println("执行线索的添加操作");
+        System.out.println("执行交易的添加操作");
+
+        String id = UUIDUtil.getUUID();
+        String owner = req.getParameter("owner");
+        String money = req.getParameter("money");
+        String name = req.getParameter("name");
+        String expectedDate = req.getParameter("expectedDate");
+        //此处我们暂时用客户名字，还没有id
+        String customerName = req.getParameter("customerName");
+        String stage = req.getParameter("stage");
+        String type = req.getParameter("type");
+        String source = req.getParameter("source");
+        String activityId = req.getParameter("activityId");
+        String contactsId = req.getParameter("contactsId");
+        //创建时间，当前系统时间
+        String createTime = DateTimeUtil.getSysTime();
+        //创建人：当前登录用户
+        String createBy = ((User)req.getSession().getAttribute("user")).getName();
+        /*String editBy = req.getParameter("");
+        String editTime = req.getParameter("");*/
+        String description = req.getParameter("description");
+        String contactSummary = req.getParameter("contactSummary");
+        String nextContactTime = req.getParameter("nextContactTime");
+
+        Tran t = new Tran();
+        t.setId(id);
+        t.setOwner(owner);
+        t.setMoney(money);
+        t.setName(name);
+        t.setExpectedDate(expectedDate);
+        t.setStage(stage);
+        t.setType(type);
+        t.setSource(source);
+        t.setActivityId(activityId);
+        t.setContactsId(contactsId);
+        t.setCreateTime(createTime);
+        t.setCreateBy(createBy);
+        t.setDescription(description);
+        t.setContactSummary(contactSummary);
+        t.setNextContactTime(nextContactTime);
+
+        TranService ts = (TranService) ServiceFactory.getService(new TranServiceImpl());
+
+        //在业务层通过名字找id
+        boolean flag = ts.save(t,customerName);
+
+        if (flag){
+
+            //如果添加交易成功，跳转到列表页
+            resp.sendRedirect(req.getContextPath() + "/workbench/transaction/index.jsp");
+
+        }
 
     }
 
