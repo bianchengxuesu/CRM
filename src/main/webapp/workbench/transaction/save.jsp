@@ -1,7 +1,16 @@
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Set" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
 String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/";
+
+	//阶段及其对应的可能性
+	Map<String,String> pMap = (Map<String, String>) application.getAttribute("pMap");
+
+	Set<String> set = pMap.keySet();
+
+
 %>
 <!DOCTYPE html>
 <html>
@@ -20,6 +29,22 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 <script type="text/javascript" src="jquery/bs_typeahead/bootstrap3-typeahead.min.js"></script>
 
 	<script>
+
+		//处理阶段和对应可能性的json
+		var json = {
+
+			<%
+				for (String key : set) {
+
+					String value = pMap.get(key);
+
+			%>
+				"<%=key%>" : <%=value%>, //此处的逗号不用自己处理，已经是json格式了，会自动屏蔽
+			<%
+				}
+			%>
+
+		};
 
 		$(function () {
 
@@ -203,7 +228,24 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				$("#searchContactsModal").modal("hide");
 
 			});
-			
+
+
+			//为阶段的下拉框，绑定选中下拉框事件，根据选中阶段，绑定阶段填写可能性
+			$("#create-stage").change(function () {
+
+				//取得选中的阶段
+				var stage = $("#create-stage").val();
+
+				/*
+					我们现在以json.key的形式不能取得value因为今天的stage是一个可变的变量
+					如果是这样的key，那么我们就不能以传统的json.key的形式来取值我们要使用的取值方式为
+					json[ key]
+				*/
+				var possibility = json[stage];
+
+				$("#create-possibility").val(possibility);
+			})
+
 		})
 
 	</script>
@@ -361,7 +403,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			</div>
 			<label for="create-transactionStage" class="col-sm-2 control-label">阶段<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-			  <select class="form-control" id="create-transactionStage">
+			  <select class="form-control" id="create-stage">
 			  	<option></option>
 			  	<c:forEach items="${stageList}" var="s">
 					<option value="${s.value}">${s.text}</option>
