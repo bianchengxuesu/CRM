@@ -101,6 +101,9 @@
   <url-pattern>/workbench/transaction/getContactsListByName.do</url-pattern>
   <url-pattern>/workbench/transaction/getCustomerName.do</url-pattern>
   <url-pattern>/workbench/transaction/save.do</url-pattern>
+  <url-pattern>/workbench/transaction/pageList.do</url-pattern>
+  <url-pattern>/workbench/transaction/detail.do</url-pattern>
+  <url-pattern>/workbench/transaction/getHistoryListByTranId.do</url-pattern>
   </servlet-mapping>
 
 

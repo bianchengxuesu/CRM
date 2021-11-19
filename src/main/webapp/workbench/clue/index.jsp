@@ -129,7 +129,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		$("#quanxuan").prop("checked",false);
 
 		//清空之前的内容
-		$("#activityBody").html("");
+		$("#clueBody").html("");
 
 		//alert("展现列表");
 		$.ajax({
@@ -177,10 +177,10 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					html += '<td>'+n.endDate+'</td>';
 					html += '</tr>';*/
 
-				})
+				});
 
 
-				$("#activityBody").html(html);
+				$("#clueBody").html(html);
 
 				//总页数
 				//var totalPages = data.total%pageSize==0?data.total/pageSize:parseInt(data.total/pageSize)+1;
@@ -632,7 +632,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<td>线索状态</td>
 						</tr>
 					</thead>
-					<tbody id="activityBody">
+					<tbody id="clueBody">
 
 					</tbody>
 				</table>

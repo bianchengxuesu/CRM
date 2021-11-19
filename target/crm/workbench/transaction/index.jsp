@@ -19,11 +19,101 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 <script type="text/javascript">
 
 	$(function(){
-		
-		
+
+		//进页面就读取列表,暂未写分页
+		pageList(1,2);
 		
 	});
-	
+
+	function pageList(pageNo,pageSize) {
+
+		//将全选框点灭
+		$("#quanxuan").prop("checked",false);
+
+		//清空之前的内容
+		$("#tranBody").html("");
+
+		//alert("展现列表");
+		$.ajax({
+			url : "workbench/transaction/pageList.do",
+			data : {
+				"pageNo" : pageNo,
+				"pageSize" : pageSize
+			},
+			type : "get",
+			dataType : "json",
+			success : function (data) {
+				/*
+
+					data
+						我们需要的 [{tran1}，{2}，{3}，] List<Tran> tranList
+
+						//分页先不写
+						{"total":100}  int total
+						总data: {"total":100,"dataList":[{tran1}，{tran2}，{tran3}]}
+
+				 */
+
+				var html = "";
+
+				//每个n就是一个
+				$.each(data,function (i,n) {
+
+					html += '<tr>';
+					html += '<td><input type="checkbox" /></td>';
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/transaction/detail.do?id='+n.id+'\';">'+n.name+'</a></td>';
+					html += '<td>'+n.owner+'</td>';
+					html += '<td>'+n.stage+'</td>';
+					html += '<td>'+n.type+'</td>';
+					html += '<td>'+n.createBy+'</td>';
+					html += '<td>'+n.source+'</td>';
+					html += '<td>'+n.contactsId+'</td>';
+					html += '</tr>';
+
+					/*html += '<tr class="active">';
+					html += '<td><input type="checkbox" name="xz" value="'+n.id+'"/></td>';
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail.do?id='+n.id+'\';">'+n.name+'</a></td>';
+					html += '<td>'+n.owner+'</td>';
+					html += '<td>'+n.startDate+'</td>';
+					html += '<td>'+n.endDate+'</td>';
+					html += '</tr>';*/
+
+				});
+
+
+				$("#tranBody").html(html);
+
+				//总页数
+				//var totalPages = data.total%pageSize==0?data.total/pageSize:parseInt(data.total/pageSize)+1;
+
+
+				//数据处理完毕，结合分页查询，对前端展现分页信息
+				/*$("#activityPage").bs_pagination({
+					currentPage: pageNo, // 页码
+					rowsPerPage: pageSize, // 每页显示的记录条数
+					maxRowsPerPage: 20, // 每页最多显示的记录条数
+					totalPages: totalPages, // 总页数
+					totalRows: data.total, // 总记录条数
+
+					visiblePageLinks: 3, // 显示几个卡片
+
+					showGoToPage: true,
+					showRowsPerPage: true,
+					showRowsInfo: true,
+					showRowsDefaultInfo: true,
+
+					//回调函数在点击分页时触发
+					onChangePage : function(event, data){
+						pageList(data.currentPage , data.rowsPerPage);
+					}
+				});*/
+
+			}
+		});
+
+	}
+
+
 </script>
 </head>
 <body>
@@ -144,7 +234,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				<table class="table table-hover">
 					<thead>
 						<tr style="color: #B3B3B3;">
-							<td><input type="checkbox" /></td>
+							<td><input type="checkbox" id="quanxuan" /></td>
 							<td>名称</td>
 							<td>客户名称</td>
 							<td>阶段</td>
@@ -154,8 +244,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<td>联系人名称</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
+					<tbody id="tranBody">
+						<%--<tr>
 							<td><input type="checkbox" /></td>
 							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">动力节点-交易01</a></td>
 							<td>动力节点</td>
@@ -174,7 +264,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                             <td>zhangsan</td>
                             <td>广告</td>
                             <td>李四</td>
-                        </tr>
+                        </tr>--%>
 					</tbody>
 				</table>
 			</div>

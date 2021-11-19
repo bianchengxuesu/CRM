@@ -96,4 +96,31 @@ public class TranServiceImpl implements TranService {
         return flag;
 
     }
+
+    @Override
+    public List<Tran> getAllTrans() {
+
+        List<Tran> tranList = tranDao.getAllTrans();
+
+        return tranList;
+
+    }
+
+    @Override
+    public Tran detail(String id) {
+
+        Tran t = tranDao.detail(id);
+
+        return t;
+
+    }
+
+    @Override
+    public List<TranHistory> getHistoryListByTranId(String tranId) {
+
+        List<TranHistory> th = tranHistoryDao.getHistoryListByTranId(tranId);
+
+        return th;
+
+    }
 }

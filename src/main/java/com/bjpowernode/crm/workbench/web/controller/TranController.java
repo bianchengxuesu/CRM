@@ -7,10 +7,7 @@ import com.bjpowernode.crm.utils.DateTimeUtil;
 import com.bjpowernode.crm.utils.PrintJson;
 import com.bjpowernode.crm.utils.ServiceFactory;
 import com.bjpowernode.crm.utils.UUIDUtil;
-import com.bjpowernode.crm.workbench.domain.Activity;
-import com.bjpowernode.crm.workbench.domain.Clue;
-import com.bjpowernode.crm.workbench.domain.Contacts;
-import com.bjpowernode.crm.workbench.domain.Tran;
+import com.bjpowernode.crm.workbench.domain.*;
 import com.bjpowernode.crm.workbench.service.ActivityService;
 import com.bjpowernode.crm.workbench.service.ClueService;
 import com.bjpowernode.crm.workbench.service.CustomerService;
@@ -20,6 +17,7 @@ import com.bjpowernode.crm.workbench.service.impl.ClueServiceImpl;
 import com.bjpowernode.crm.workbench.service.impl.CustomerServiceImpl;
 import com.bjpowernode.crm.workbench.service.impl.TranServiceImpl;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -60,8 +58,47 @@ public class TranController extends HttpServlet {
 
             save(req,resp);
 
+        }else if("/workbench/transaction/pageList.do".equals(path)){
+
+            pageList(req,resp);
+
+        }else if("/workbench/transaction/detail.do".equals(path)){
+
+            detail(req,resp);
+
+        }else if("/workbench/transaction/getHistoryListByTranId.do".equals(path)){
+
+            getHistoryListByTranId(req,resp);
+
         }
 
+
+    }
+
+    private void getHistoryListByTranId(HttpServletRequest req, HttpServletResponse resp) {
+
+        System.out.println("根据交易id取得相应的历史列表");
+
+        String tranId = req.getParameter("tranId");
+
+        TranService tranService = (TranService) ServiceFactory.getService(new TranServiceImpl());
+
+        List<TranHistory> thList = tranService.getHistoryListByTranId(tranId);
+
+        //阶段和可能性之间的对应关系
+        Map<String,String> pMap = (Map<String, String>) this.getServletContext().getAttribute("pMap");
+
+        //将交易历史列表遍历
+        for (TranHistory tranHistory : thList) {
+
+            String stage = tranHistory.getStage();
+            String possibility = pMap.get(stage);
+
+            tranHistory.setPossibility(possibility);
+
+        }
+
+        PrintJson.printJsonObj(resp,thList);
 
     }
 
@@ -129,29 +166,36 @@ public class TranController extends HttpServlet {
 
     private void detail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        System.out.println("进入到线索详细页面");
+        System.out.println("进入到交易详细页面");
 
         String id = req.getParameter("id");
 
-        ClueService cs = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+        TranService tranService = (TranService) ServiceFactory.getService(new TranServiceImpl());
 
-        Clue c = cs.detail(id);
+        Tran t = tranService.detail(id);
 
-        req.setAttribute("c",c);
+        String stage = t.getStage();
 
-        req.getRequestDispatcher("/workbench/clue/detail.jsp").forward(req,resp);
+        //处理阶段对应的可能性
+//        ServletContext application = this.getServletContext();
+        Map<String,String> pMap = (Map<String, String>) this.getServletContext().getAttribute("pMap");
+        String possibility = pMap.get(stage);
+        t.setPossibility(possibility);
+
+        req.setAttribute("t",t);
+        req.getRequestDispatcher("/workbench/transaction/detail.jsp").forward(req,resp);
 
     }
 
     private void pageList(HttpServletRequest req, HttpServletResponse resp) {
 
-        System.out.println("进入列表查询操作");
+        System.out.println("进入交易查询操作");
 
-        ClueService cs = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+        TranService ts = (TranService) ServiceFactory.getService(new TranServiceImpl());
 
-        List<Clue> clueList = cs.getAllClues();
+        List<Tran> tranList = ts.getAllTrans();
 
-        PrintJson.printJsonObj(resp,clueList);
+        PrintJson.printJsonObj(resp,tranList);
 
     }
 
