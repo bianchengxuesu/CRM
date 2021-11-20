@@ -70,7 +70,67 @@ public class TranController extends HttpServlet {
 
             getHistoryListByTranId(req,resp);
 
+        }else if("/workbench/transaction/changeStage.do".equals(path)){
+
+            changeStage(req,resp);
+
+        }else if("/workbench/transaction/getCharts.do".equals(path)){
+
+            getCharts(req,resp);
+
         }
+
+
+    }
+
+    private void getCharts(HttpServletRequest req, HttpServletResponse resp) {
+
+        System.out.println("取得交易阶段数据统计图的数据");
+
+        TranService ts = (TranService) ServiceFactory.getService(new TranServiceImpl());
+
+        /*
+            业务层放回 total和dataList
+            通过map打包将两项返回
+         */
+        Map<String,Object> map = ts.getCharts();
+
+        PrintJson.printJsonObj(resp,map);
+
+    }
+
+    private void changeStage(HttpServletRequest req, HttpServletResponse resp) {
+
+        System.out.println("执行改变阶段的操作");
+
+        String id = req.getParameter("id");
+        String stage = req.getParameter("stage");
+        String money = req.getParameter("money");
+        String expectedDate = req.getParameter("expectedDate");
+        String editTime = DateTimeUtil.getSysTime();
+        String editBy = ((User)req.getSession().getAttribute("user")).getName();
+
+        Tran t = new Tran();
+        t.setId(id);
+        t.setStage(stage);
+        t.setMoney(money);
+        t.setExpectedDate(expectedDate);
+        t.setEditBy(editBy);
+        t.setEditTime(editTime);
+
+        TranService ts = (TranService) ServiceFactory.getService(new TranServiceImpl());
+
+        boolean flag = ts.changeStage(t);
+
+        Map<String,String> pMap = (Map<String,String>)this.getServletContext().getAttribute("pMap");
+        t.setPossibility(pMap.get(stage));
+
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("success", flag);
+        map.put("t", t);
+
+        PrintJson.printJsonObj(resp,map);
+
 
 
     }

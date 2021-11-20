@@ -86,6 +86,18 @@
     <finalName>crm</finalName>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
+        <plugin>
+          <!-- 指定maven编译的jdk版本 -->
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.1</version>
+          <configuration>
+            <verbose>true</verbose>
+            <fork>true</fork>
+            <!--你的jdk地址-->
+            <executable>D:/jdk1.8/bin/javac</executable>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
     <resources>
